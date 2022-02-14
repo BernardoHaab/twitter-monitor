@@ -10,10 +10,12 @@ import { BullModule } from '@nestjs/bull';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Tweet.name, schema: TweetSchema }]),
-    CacheModule.register({
-      host: 'redis',
-      port: 6379,
-      store: redisStore,
+    CacheModule.registerAsync({
+      useFactory: () => ({
+        host: process.env.REDIS_HOST,
+        port: process.env.REDIS_PORT,
+        store: redisStore,
+      }),
     }),
     BullModule.registerQueue({
       name: 'emails',

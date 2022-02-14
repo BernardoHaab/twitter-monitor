@@ -1,5 +1,6 @@
 import { BullModule } from '@nestjs/bull';
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppController } from './app.controller';
@@ -8,18 +9,16 @@ import { TweetsModule } from './tweets/tweets.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      'mongodb://root:root@db/analytics?authSource=admin',
-      {
-        useNewUrlParser: true,
-      },
-    ),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGO_DSN, {
+      useNewUrlParser: true,
+    }),
     TweetsModule,
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       redis: {
-        host: 'redis',
-        port: 6379,
+        host: process.env.REDIS_HOST,
+        port: parseInt(process.env.REDIS_PORT),
       },
     }),
   ],
