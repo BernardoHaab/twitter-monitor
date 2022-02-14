@@ -12,14 +12,14 @@ export class MailListService {
   ) {}
 
   async create({ emails }: CreateMailListDto) {
-    const mail = await this.findOne();
+    const mailList = await this.findOne();
 
-    if (!mail) {
+    if (!mailList) {
       return this.mailListModule.create({ emails });
     }
 
-    await mail.update({ emails }).exec();
-    return mail;
+    await mailList.update({ emails }).exec();
+    return mailList;
   }
 
   async findOne() {
